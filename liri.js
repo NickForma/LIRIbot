@@ -1,9 +1,12 @@
 let dotenv = require("dotenv").config();
 let inquirer = require("inquirer");
 var keys = require("./keys.js");
-let Spotify = require("node-spotify-api");
+// let Spotify = require("node-spotify-api");
+let fs = require("fs");
+let Search = require("./search");
+let search = new Search();
 
-var spotify = new Spotify(keys.spotify);
+// var spotify = new Spotify(keys.spotify);
 
 let key = process.env;
 
@@ -15,22 +18,22 @@ let readFromFile = function() {
     let type = entry[0];
     let query = entry[1];
 
-    switch (type) {
-      case "spotify-this-song":
-        search.spotify(query, searchPrompt);
-        break;
-      case "concert-this":
-        search.concert(query, searchPrompt);
-        break;
-      case "movie-this":
-        search.omdb(query, searchPrompt);
-        break;
-      case "random":
-        readFromFile();
-        break;
-      default:
-        break;
-    }
+    // switch (type) {
+    //   case "spotify-this-song":
+    //     search.spotify(query, searchPrompt);
+    //     break;
+    //   case "concert-this":
+    //     search.concert(query, searchPrompt);
+    //     break;
+    //   case "movie-this":
+    //     search.omdb(query, searchPrompt);
+    //     break;
+    //   case "random":
+    //     readFromFile();
+    //     break;
+    //   default:
+    //     break;
+    // }
   });
 };
 
@@ -46,16 +49,29 @@ let searchPrompt = function() {
         type: "list",
         name: "search",
         message: "What do you want to search for?",
-        choices: ["Concert", "Song", "Movie", "Random"]
+        choices: ["Concert", "Song", "Movie", "Random", "Exit"]
+      },
+      {
+        type: "input",
+        name: "query",
+        message: "Name that thing!"
+      },
+      {
+        when: function(answers) {
+          if (answers.search === "Exit") {
+            return false;
+          }
+        }
       }
     ])
     .then(user => {
       console.log(`Hello ${user.name}, Let's find you a ${user.search}`);
-      switch (user.options) {
+      switch (user.search) {
         case "Concert":
           search.concert(user.query, searchPrompt);
           break;
         case "Song":
+          console.log(user.query);
           search.spotify(user.query, searchPrompt);
           break;
         case "Movie":
@@ -63,6 +79,9 @@ let searchPrompt = function() {
           break;
         case "Random":
           readFromFile(searchPrompt);
+          break;
+        case "Exit":
+          process.exit();
           break;
         default:
           break;
