@@ -18,22 +18,22 @@ let readFromFile = function() {
     let type = entry[0];
     let query = entry[1];
 
-    // switch (type) {
-    //   case "spotify-this-song":
-    //     search.spotify(query, searchPrompt);
-    //     break;
-    //   case "concert-this":
-    //     search.concert(query, searchPrompt);
-    //     break;
-    //   case "movie-this":
-    //     search.omdb(query, searchPrompt);
-    //     break;
-    //   case "random":
-    //     readFromFile();
-    //     break;
-    //   default:
-    //     break;
-    // }
+    switch (type) {
+      case "spotify-this-song":
+        search.spotify(query, searchPrompt);
+        break;
+      case "concert-this":
+        search.concert(query, searchPrompt);
+        break;
+      case "movie-this":
+        search.omdb(query, searchPrompt);
+        break;
+      case "random":
+        readFromFile();
+        break;
+      default:
+        break;
+    }
   });
 };
 
@@ -55,14 +55,14 @@ let searchPrompt = function() {
         type: "input",
         name: "query",
         message: "Name that thing!"
-      },
-      {
-        when: function(answers) {
-          if (answers.search === "Exit") {
-            return false;
-          }
-        }
       }
+      // {
+      //   when: function(answers) {
+      //     if (answers.search === "Exit") {
+      //       return false;
+      //     }
+      //   }
+      // },
     ])
     .then(user => {
       console.log(`Hello ${user.name}, Let's find you a ${user.search}`);
@@ -71,7 +71,6 @@ let searchPrompt = function() {
           search.concert(user.query, searchPrompt);
           break;
         case "Song":
-          console.log(user.query);
           search.spotify(user.query, searchPrompt);
           break;
         case "Movie":
