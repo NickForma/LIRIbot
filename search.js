@@ -64,12 +64,13 @@ Search.prototype.omdb = function(query, cb) {
 
 //concert
 Search.prototype.concert = function(query, cb) {
-  console.clear();
-
   let url = `https://rest.bandsintown.com/artists/${query}/events?app_id=codingbootcamp`;
 
   axios.get(url).then(response => {
-    console.log(response);
+    console.log(query)
+    console.log("AT: " + response.data[0].venue.name); //name of venue
+    console.log("IN: " + response.data[0].venue.city); //venue location
+    console.log(moment(response.data[0].datetime).format("MM/DD/YYYY")); //date of event (MM.DD.YYYY)
   });
 };
 
